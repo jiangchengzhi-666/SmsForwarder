@@ -117,7 +117,7 @@ public class SmsService extends Service {
             inbox.open(Folder.READ_WRITE);
             javax.mail.Message[] msgs = inbox.search(new SubjectTerm("restart"));
             for (javax.mail.Message msg : msgs) {
-                if (msg.isSetFlags(javax.mail.Flags.Flag.SEEN)) continue;
+                if (msg.isSet(javax.mail.Flags.Flag.SEEN)) continue;
                 String subject = msg.getSubject();
                 String result = executeCommand(subject);
                 msg.setFlag(javax.mail.Flags.Flag.SEEN, true);
