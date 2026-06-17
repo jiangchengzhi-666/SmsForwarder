@@ -3,12 +3,7 @@ package com.example.smsforwarder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Verification code extractor
- * Extracts verification codes from SMS messages using regex
- */
 public class CodeExtractor {
-
     private static final String[] KEYWORDS = {
         "verification code", "dynamic code", "code", "pin", "PIN"
     };
@@ -22,10 +17,7 @@ public class CodeExtractor {
             keywordGroup.append(Pattern.quote(KEYWORDS[i]));
         }
 
-        // Pattern 1: keyword followed by digits with optional separators
         String pattern1 = "(?i)(" + keywordGroup + ")[:\s\-_.]?\s*(\d{4,8})";
-
-        // Pattern 2: keyword + "is/are" + digits
         String pattern2 = "(?i)(" + keywordGroup + ")\s+(?:is|are)\s+(\d{4,8})";
 
         CODE_PATTERNS = new Pattern[]{
@@ -34,28 +26,18 @@ public class CodeExtractor {
         };
     }
 
-    // Fallback: extract standalone digits from short messages
     private static final Pattern PURE_DIGIT = Pattern.compile("(\d{4,8})");
 
     public static String extract(String message) {
-        if (message == null || message.isEmpty()) {
-            return null;
-        }
-
+        if (message == null || message.isEmpty()) return null;
         for (Pattern pattern : CODE_PATTERNS) {
             Matcher matcher = pattern.matcher(message);
-            if (matcher.find()) {
-                return matcher.group(2);
-            }
+            if (matcher.find()) return matcher.group(2);
         }
-
         if (message.length() <= 30) {
             Matcher matcher = PURE_DIGIT.matcher(message);
-            if (matcher.find()) {
-                return matcher.group(1);
-            }
+            if (matcher.find()) return matcher.group(1);
         }
-
         return null;
     }
 }
